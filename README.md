@@ -2,7 +2,7 @@
 ![grafik](https://github.com/ullisun/RopiLawnMow/assets/86979044/6c603203-04eb-41f4-95ac-c69e949fea1a)
 
 
-The RoπLawnMow is based on Raspberry Pi. The intention is to replace the electronic of a defect LawnMower<br>
+The RoπLawnMow is based on Raspberry Pi. The intention is to replace the defect electronic of an existing LawnMower<br>
 and use most of the components for further operation.<br>
 A lot of information you will find in in the<br>
 https://www.diy-robot-lawn-mower.com/threads/roplawnmow.96/ Forum
