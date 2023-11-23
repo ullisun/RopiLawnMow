@@ -170,8 +170,8 @@ def mon_RPM():
         if time()-output >=1:
             print("Verbleiben= ", round(30-(time()-start),1), "Sekunden:  Links: Tics=",gl, " Anzahl der Umdrehungen=", UL, " RPM= ",round(RPML.RPM(),2), " Rechts: Tics= ",gr, " Anzahl der Umdrehungen=", UR, " RPM= ",round(RPMR.RPM(),2))         
             output=time()
-        if time()-start> 10:
-            motorr.stop()    
+        #if time()-start> 10:
+        #    motorr.stop()    
             
     motorr.stop()    
     motorl.stop()    
