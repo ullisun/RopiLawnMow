@@ -16,4 +16,4 @@ Please copy the SDL_Pi_INA3221.py in the same direction or refer to the valid pa
 |-----------------------------------------------------------------|
 |Implementation of gyroscope-based tracking control               |
 |Implementation of additional interfaces to the PiMowBot IT SW    |
-|Generation additional Ideas                                      |
+|Generation of additional Ideas                                      |
