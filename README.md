@@ -15,5 +15,6 @@ Please copy the SDL_Pi_INA3221.py in the same direction or refer to the valid pa
 |  Outlook|
 |-----------------------------------------------------------------|
 |Implementation of gyroscope-based tracking control               |
-|Implementation of additional interfaces to the PiMowBot IT SW    |
+|Implementation of additional interfaces to the PiMowBot IT SW  
+|Creating a implementation concept  for a charger station |
 |Generation of additional Ideas                                      |
