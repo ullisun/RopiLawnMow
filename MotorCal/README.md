@@ -7,7 +7,8 @@ if you start trunwheel, every wheel has to turned by hand. The tics per wheel ar
 ![grafik](https://github.com/ullisun/RopiLawnMow/assets/86979044/642c0e50-9b17-4d48-a9bc-0d895225c16c)
 <br>
 After that you can check it with the **Mon_RPM()** function.<br>
-Disable turnwheel and enable the function MonRPM in line 311. The wheels will turn for 30 sec. arround. During this the screen display counted tics, revolutions and rpm of each wheel.
+Disable turnwheel and enable the function MonRPM in line 311. The wheels will turn around for 30 sec. During this time the screen displays the counted "tics", "revolutions" and "rpm" of each wheel.
+
 <br><br>
 ![grafik](https://github.com/ullisun/RopiLawnMow/assets/86979044/5ad2c6bc-6241-4cd7-ab09-ee7f9e1eab19)
 <br>
