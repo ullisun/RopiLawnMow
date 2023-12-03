@@ -1,0 +1,15 @@
+#trip1 drives ffd
+16,16,1100,1100
+#now half_turn ccw 
+-8,8,880,880
+#short trip back
+-12,-12,400,400
+# now to 1. position
+16,16,1100,1100
+#change track cw
+-12,-12,300,300
+8,-8,600,600
+10,10,300,300
+8,-8,300,300
+# now backward
+-12,-12,900,900
