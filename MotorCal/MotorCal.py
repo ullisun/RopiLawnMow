@@ -39,6 +39,8 @@ class Motor:
             pi.write(self.PinDir,1)
         if self.MainDir=="B":
             pi.write(self.PinDir,0)
+    def release(self):
+        pi.write(self.PinBreak,0)
 
 
 class PID:
@@ -149,6 +151,8 @@ start= time()
 
 def turnwheel():
     global ogr,ogl
+    motorl.release()  # Bremse lösen
+    motorr.release()  # Bremse lösen
     start=time()    
     while time()-start <=60:
         if ogr!=gr or ogl != gl:
