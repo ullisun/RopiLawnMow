@@ -1,3 +1,8 @@
+# Update April 30th 2024 in order to fit with the PiMowBot Wiring.
+# I changed rbt from 4 to 18 and
+# pindir 11 to pindir 19
+
+
 from time import time, sleep, strftime
 import signal
 import sys, os
@@ -104,7 +109,7 @@ PI=3.141592653589793
 ticksperRev=1093   #597
 wheeldiameter=22   #cm
 lbtn=17
-rbtn=4
+rbtn=18
 UR=0
 UL=0
 l=0
@@ -124,7 +129,7 @@ pi.set_mode(lbtn,pigpio.INPUT)
 pi.set_mode(rbtn,pigpio.INPUT)
 
 motorl=Motor(PinPwm=16,PinDir=20,PinBreak=21,MaxSpeed=176,MainDir="F")
-motorr=Motor(PinPwm=13,PinDir=11,PinBreak=26,MaxSpeed=176,MainDir="B")
+motorr=Motor(PinPwm=13,PinDir=19,PinBreak=26,MaxSpeed=176,MainDir="B")
 
 HallL=pi.callback(lbtn, pigpio.RISING_EDGE, L_Hall)
 RPML = read_RPM.reader(pi, lbtn,pulses_per_rev=ticksperRev,min_RPM=0.0)
