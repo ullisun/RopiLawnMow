@@ -16,7 +16,7 @@ So feel free to change the values.
 
 There is an other option<br>
 If you run **python drive.py 12 300** <br>Your mower will run forward with 12 rpm (both wheels) and will stop after 300 cm. <br>
-the exact **ticksperRev=1093** and **wheeldiameter=22** in line 104 / 105 of your mower is required.
+the exact **ticksperRev=1093** and **wheeldiameter=22** in line 109 / 110 of your mower is required.
 The rpms you type in as parameter should be greater than 7 and less the 27. If you use negative rpm the mower drives  backward<br>
 Please have in mind that this project is in development and other features I will implement as soon as I find the time. <br>
 <br>
