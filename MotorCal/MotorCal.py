@@ -113,8 +113,9 @@ def signal_term_handler(signal, frame):
 signal.signal(signal.SIGTERM, signal_term_handler)
 
 lbtn=17
-rbtn=4
-ticksperRev=1093   #597
+rbtn=18
+ticksperRev= 597
+maxpwm=245
 UR=0
 UL=0
 l=0
@@ -136,8 +137,8 @@ pi=pigpio.pi()
 pi.set_mode(lbtn,pigpio.INPUT)
 pi.set_mode(rbtn,pigpio.INPUT)
 
-motorl=Motor(PinPwm=16,PinDir=20,PinBreak=21,MaxSpeed=176,MainDir="F")
-motorr=Motor(PinPwm=13,PinDir=11,PinBreak=26,MaxSpeed=176,MainDir="B")
+motorr=Motor(PinPwm=16,PinDir=21,PinBreak=20,MaxSpeed=maxpwm,MainDir="F")
+motorl=Motor(PinPwm=13,PinDir=26,PinBreak=19,MaxSpeed=maxpwm,MainDir="B")
 
 HallL=pi.callback(lbtn, pigpio.RISING_EDGE, L_Hall)
 RPML = read_RPM.reader(pi, lbtn,pulses_per_rev=ticksperRev,min_RPM=0.0)
@@ -151,12 +152,16 @@ start= time()
 
 def turnwheel():
     global ogr,ogl
+    testtime= 60      # nach Anzahl der Sekunden wird die Routine beendet
+    print("Bitte beide Räder drehen um die Anzahl der Tics je Rad zu ermitteln")
+    print("Der TEst wird nach ", testtime, " Sekunden vom Programm beendet")
+
     motorl.release()  # Bremse lösen
     motorr.release()  # Bremse lösen
     start=time()    
-    while time()-start <=60:
+    while time()-start <=testtime:
         if ogr!=gr or ogl != gl:
-            print("Links: " ,gl, " Rechts ",gr)
+            print("Links: " ,gl, " Rechts ",gr, "\t es bleiben: ", round(testtime -(time()-start),0), " Sekunden") 
             ogr=gr
             ogl=gl
         sleep(0.01)    
@@ -165,12 +170,13 @@ def turnwheel():
 
 
 def mon_RPM():
+    testtime=20       # Zeitspanne die der Test dauert
     output=start
     motorl.ffd()
     motorr.ffd()
     motorl.speed(100)
     motorr.speed(100)    
-    while time()-start <=20:
+    while time()-start <=testtime:
         if time()-output >=1:
             print("Verbleiben= ", round(30-(time()-start),1), "Sekunden:  Links: Tics=",gl, " Anzahl der Umdrehungen=", UL, " RPM= ",round(RPML.RPM(),2), " Rechts: Tics= ",gr, " Anzahl der Umdrehungen=", UR, " RPM= ",round(RPMR.RPM(),2))         
             output=time()
@@ -185,13 +191,14 @@ def mon_RPM():
 
 
 def hallcheck():
+    setRev=8        # Testzyklus ist 8 Umdrehungen    
     i=0
     valuel=0
     valuer=0
     start= time()
     motorr.stop()
     motorl.stop()
-    while i<=176:
+    while i<=maxpwm:
         valuel=i
         valuer=i
         motorr.speed(valuer)
@@ -217,14 +224,14 @@ def hallcheck():
         if gl> ticksperRev*12-ticksperRev/4 and valuel > 34:
             #print("BremseL")
             valuel=32
-        if gr>=ticksperRev*12:
+        if gr>=ticksperRev*setRev:
             print("rechten Muss motor Stoppen")
             valuer=0
             motorr.stop()
-        if gl>=ticksperRev*12:
+        if gl>=ticksperRev*setRev:
             valuel=0
             motorl.stop()
-        if gr>= ticksperRev*12 and gl >= ticksperRev*12:
+        if gr>= ticksperRev*setRev and gl >= ticksperRev*setRev:
             break    
     
     print("Schluss nach,", round(time()-start,2), " Sekunden")
@@ -233,14 +240,14 @@ def hallcheck():
 
 def testsoll():
     start=time()
-    ir=1          #=> ca. 14 prm auf dem Teststand bi 20 Volt Akkuspannung
+    setRev=5        # Testzyklus ist 5 Umdrehungen    
+    ir=1            #=> ca. 14 prm auf dem Teststand bi 20 Volt Akkuspannung
     #ir=80          #=> ca. 22 prm auf dem Teststand bi 20 Volt Akkuspannung
     #ir=110         #=> ca.31 prm auf dem Teststand bi 20 Volt Akkuspannung
     #ir= 130        #=> ca.36 prm auf dem Teststand bi 20 Volt Akkuspannung 29 bei 17Volt Akku-Spannung
     il=ir
     oil=il
     oir=ir
-    setRev=5
     pidl = PID(Kp=0.8, Ki=0.1, Kd=0.9)
     pidr = PID(Kp=0.8, Ki=0.1, Kd=0.9)
     dt = 0.1
@@ -311,8 +318,8 @@ if __name__ =="__main__":
     
     try:
              
-       turnwheel()
-       # mon_RPM()       
+       #turnwheel()
+       mon_RPM()       
        #hallcheck()
        #testsoll()
 
@@ -328,5 +335,6 @@ if __name__ =="__main__":
         HallR.cancel()
         RPML.cancel()
         RPMR.cancel()
-        pi.stop()    
+        pi.stop()
+        
 
