@@ -1,6 +1,9 @@
 # Update April 30th 2024 in order to fit with the PiMowBot Wiring.
 # I changed rbt from 4 to 18 and
 # pindir 11 to pindir 19
+#
+# Update 20th Mai
+# Update Output Scection
 
 
 from time import time, sleep, strftime
@@ -106,8 +109,9 @@ signal.signal(signal.SIGTERM, signal_term_handler)
 
 
 PI=3.141592653589793
-ticksperRev=1093   #597
+ticksperRev= 1054 
 wheeldiameter=22   #cm
+
 lbtn=17
 rbtn=18
 UR=0
@@ -128,8 +132,8 @@ pi=pigpio.pi()
 pi.set_mode(lbtn,pigpio.INPUT)
 pi.set_mode(rbtn,pigpio.INPUT)
 
-motorl=Motor(PinPwm=16,PinDir=20,PinBreak=21,MaxSpeed=176,MainDir="F")
-motorr=Motor(PinPwm=13,PinDir=19,PinBreak=26,MaxSpeed=176,MainDir="B")
+motorr=Motor(PinPwm=16,PinDir=21,PinBreak=20,MaxSpeed=245,MainDir="F")
+motorl=Motor(PinPwm=13,PinDir=26,PinBreak=19,MaxSpeed=245,MainDir="B")
 
 HallL=pi.callback(lbtn, pigpio.RISING_EDGE, L_Hall)
 RPML = read_RPM.reader(pi, lbtn,pulses_per_rev=ticksperRev,min_RPM=0.0)
@@ -151,8 +155,8 @@ def drive(rpml,rpmr,ziell,zielr):
     ovaluel=0
     ovaluer=0
     # 890 = halbe Umdrehung 
-    pidl = PID(Kp=0.8, Ki=0.1, Kd=0.9)
-    pidr = PID(Kp=0.8, Ki=0.1, Kd=0.9)
+    pidl = PID(Kp=1.2, Ki=0.1, Kd=0.9)
+    pidr = PID(Kp=1.2, Ki=0.1, Kd=0.9)
     dt = 0.1
     current_valueL = 0.0
     current_valueR = 0.0
@@ -169,7 +173,8 @@ def drive(rpml,rpmr,ziell,zielr):
     cancel=False
     done=True
     
-    print ("Zeit ; Soll Links ; vaule Links;  rpmL ;sollRPMR ;Value R ;rpmr ;  Ticsl ;Ticsr ;")  
+    print ("Zeit;  Soll L; Value L; RPM-L ;Soll R ; Value R; RMP R  ;    Ticsl       ;  Ticsr ")
+    print ("==================================================================================")  
           
     while valuer>0 or valuel>0 and cancel == False:  # time()-start < 30:
         sleep(dt)
@@ -200,7 +205,9 @@ def drive(rpml,rpmr,ziell,zielr):
             #print(gl, " ", ziell, " Linker Motor Stop")
         else:            
             valuel=(valuel+current_valueL)
-        print (round(time()-start,2),";", sollRPML, ";", round(valuel/176*100,0), ";" ,links,";", sollRPMR, ";",round(valuer/176*100,0), ";", rechts, "; Ticsl ;", gl, "; Ticsr ;", gr)  
+        print ((str((round(time()-start,2)))+"\t;"+ str(sollRPML) + "\t;"+str(round(valuel/245*100,0)) + "\t;" 
+              +str(links) +"\t;"+str(sollRPMR) +"\t;"+str(round(valuer/245*100,0))+ "\t;"+ str(rechts)+ "\t; Ticsl ;"+str(gl) + "\t; Ticsr ;" +str(gr)).expandtabs(8))
+        #print (f"{'Zeit:' + round(time()-start,2):<25}'SollRPM {sollRPML}")        #, "\t;", round(valuel/245*100,0), "\t;" ,links,"\t;", sollRPMR, "\t;",round(valuer/245*100,0), "\t;", rechts, "\t; Ticsl ;", gl, "\t; Ticsr ;", gr)  
         try:
             if valuel != ovaluel:
                 motorl.speed(int(valuel*dirl))    
@@ -218,7 +225,8 @@ def drive(rpml,rpmr,ziell,zielr):
 
 def goahead(rpm,distance):
     tics = int((distance / (wheeldiameter * PI)) * ticksperRev)
-    print(tics)
+    print("zu erwartende Tics: ", tics)
+    print("============================\n")
     try:
         drive(int(rpm),int(rpm),tics,tics)
     except KeyboardInterrupt:
@@ -262,7 +270,8 @@ if __name__ =="__main__":
     if Fehler == False:
         
         if len(sys.argv)==3 and abs(int(sys.argv[1])) >= 8 and abs(int(sys.argv[1])) <= 26:
-            print(int(sys.argv[1]), " , ", int(sys.argv[2]))
+            print("Vorgabe Argu. 1: ", int(sys.argv[1]), " , Vorgabe Argu. 2: ", int(sys.argv[2]))
+            print("")
             goahead(int(sys.argv[1]),int(sys.argv[2]))
         else:           
             file=sys.argv[1]
@@ -283,7 +292,7 @@ if __name__ =="__main__":
     HallR.cancel()
     RPML.cancel()
     RPMR.cancel()
-    pi.stop()    
+    pi.stop() 
                         
       
 
