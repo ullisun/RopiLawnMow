@@ -3,7 +3,7 @@
 # pindir 11 to pindir 19
 #
 # Update 20th Mai
-# Update Output Scection
+# Update Output Section
 
 
 from time import time, sleep, strftime
