@@ -1,0 +1,1 @@
+raspistill --timelapse 200 -t 3000000 -n --exposure sport -e jpg --thumb 80:45:15 -o /run/shm/image.jpg --width 640 --height 360 >/dev/null 2>&1 &
