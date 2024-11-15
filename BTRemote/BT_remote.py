@@ -1,3 +1,10 @@
+'''
+please note:
+This python script is a further development of the BLE-remote control receiver of the PiMowbot SW from
+TGD Consulting   http://pimowbot.tgd-consulting.de/
+
+'''
+
 import asyncio
 import sys
 import os
@@ -45,11 +52,6 @@ def lg(t):
     with open(logfolder+"BT-Remote.log", "a") as f:
         f.write(strftime('%H:%M:%S')+" " + t+"\n")
 
-def ignite():
-    global ignition
-    os.system("curl -Is -o /dev/null 'http://127.0.0.1:8080/cgi-bin/control.html?Token="+ token +"&name=engage&state=ON' &")
-    ignition=True
-
 def reset():
     global scanning, found, RCdevice, AdvService
     scanning=True
@@ -60,7 +62,7 @@ def exitroutine():
     try:
         BT_LED.off()
         if CUTTER==True:   #Wird nur ausgeschaltet, wenn er per Remote angeschaltet wurde
-            Cutter.on() # Weil piMowbot die Werte nach unten zieht wenn Active ist
+            Cutter.on()    #Weil piMowbot-SW die Werte nach unten zieht wenn Active ist
         if DRIVE==True:
             stop_drive()    
         client.socket.close()
@@ -179,10 +181,8 @@ def drive(cmd= '0'):
     if cmd_last != cmd:
         left=0      # -100 bis 100
         right=0     # -100 bis 100
-        #if True:
-        #   lg(strftime('%d-%b-%Y/%H:%M:%S')+" [ PiMowBot-It! Management: Bluetooth Remote drive command: "+cmd+" ]")
         if cmd == "0":
-            with open("/run/shm/.PiMowBotIt.power","w") as File: 
+            with open("/run/shm/.PiMowBotIt.power","w") as File:  # wird im Ropilanmow nicht ausgewertet
                 File.write("")
             ddir=0
             idle=time()
@@ -313,10 +313,9 @@ def drive(cmd= '0'):
                 CUTTER=True
             #print("CUTTer==",CUTTER)    
             Cutter.toggle()       
-            #os.system("curl -Is -o /dev/null 'http://127.0.0.1:8080/cgi-bin/control.html?Token=4582&mower=%E2%9C%87' &")
-        elif cmd=="sd": # PiMowBot-Shutdown
+            
+        elif cmd=="sd": # Shutdown the Pi
             Cutter.on() # because to be compatible to PiMowBot, its LowActive t
-            #os.system("curl -sX POST http://127.0.0.1:8080/cgi-bin/power.html -d 'Power=Power+off' -o /dev/null &")
             lg("System fährt runter")
             os.system("echo OFF > /dev/shm/shutdown")
             exitroutine()
@@ -325,7 +324,6 @@ def drive(cmd= '0'):
                 os.remove("/run/shm/mowbrake")
             with open("/run/shm/drivechain", "w")as f:
                 f.write("cm_vor")        
-            #os.system("curl -Isg -o /dev/null 'http://127.0.0.1:8080/cgi-bin/control.html?Token=4582&trip=[-1x2]' &")
         elif cmd=="Mo":
             lg("Dann Mow mal los cmd= "+ cmd)
             os.system("sudo systemctl start Mow_Std.service")
@@ -333,48 +331,23 @@ def drive(cmd= '0'):
             lg("Stoppe Mowbetrieb cmd= " + cmd )
             os.system("sudo systemctl stop Mow_Std.service")
         elif cmd=="P1":        
-            lg("Starte Programm "+ cmd + " PiMowBot-SW")
-            _m=subprocess.run("sudo systemctl start ChangeMower-SW.service",shell=True,check=True)
-            sleep(3)
-            exitroutine()
+            lg("Starte Programm "+ cmd )
+            # to be definded
+            
         elif cmd=="P2":        
             lg("Starte Programm "+ cmd)    
-                
+            # to be definded    
         
         elif cmd=="tl":  # Turn Left
             if  os.path.isfile("/run/shm/mowbrake"):    
                 os.remove("/run/shm/mowbrake")
             with open("/run/shm/drivechain", "w")as f:
                 f.write("cm_vor")    
-            #os.system("curl -Isg -o /dev/null 'http://127.0.0.1:8080/cgi-bin/control.html?Token=4582&trip=[2]' &")
+            
         cmd_last=cmd
-        #Zuendung
-        if not ignition and cmd != "0":
-            ignite()
-        #Motorwerte Grenzen checken
-        #print("Links ", left," Rechts ", right)
+        
         left = round (turtle * min (100, max (-100, left)), 2)
         right = round (turtle * min (100, max (-100, right)), 2)
-        # Motorwerte schreiben
-        
-        # ********************************   Sequenz Start   **********************************************
-        # folgende Codesequenz ist erforderlich um vom automow in den RC Modus mit priorität zu wechseln
-        #if os.path.isfile("/run/shm/drivechain"):
-        #    #print("Drivechain ist da")
-        #    with open("/run/shm/mowbrake","w") as File:
-        #        File.write("brake")
-        #        #print("Stop Datei wurde erstellt")
-        #    start=time()    
-        #    while time() - start < 1: # not os.path.isfile("/run/shm/stop"):
-        #       pass  # print("Ende von Breakk")
-        #       if time()-start > 2:
-        #            break
-        #    if  os.path.isfile("/run/shm/drivechain"):               
-        #        os.remove("/run/shm/drivechain")
-        #    if  os.path.isfile("/run/shm/stop"):    
-        #        os.remove("/run/shm/stop")
-        # ********************************   Sequenz Ende   ********************************************** 
-        #print("Links ", left," Rechts ", right)
         
         # Motorwerte schreiben
         with open("/run/shm/.PiMowBot_Motor.left","w") as File:
@@ -384,48 +357,11 @@ def drive(cmd= '0'):
             val = str(right)
             File.write(val)
     else:
-        if ignition and (cmd_last == "0") and (time() >= (idle + 60)):
-            ignition = False
-            
+        pass    
 
-
-
-async def sendDummy():
-    m=0
-    i=0    
-    while True:
-        i=i+1
-        if i <= 20:
-            m=0
-        else:
-            m=1
-        if i >= 40:
-            i=0
-            
-        data="M"+str(m)
-        #print(data)
-        #try:
-        #    client_socket.send(data)
-        #except:
-        #    print("Daten konnten nicht gesendet werden")
-        #    break
-        await asyncio.sleep(2)   
-    '''
-    i=100
-    while True:
-        msg="D"+str(i)
-        #if True:
-        #    prunt("Ja")
-        client_socket.send(msg)
-        #print(msg)
-        i=i+1
-        if i>199:
-            i=100
-        await asyncio.sleep(2)
-    ''' 
 
 # MAC Address of the Android device (replace with your device's MAC address)
-token="4582"
+
 server_mac_address = "4E:09:46:00:00:CC"  # Replace with your Android's MAC address
 _name="PiMowBotRC"
 # UUID for SPP
@@ -441,8 +377,6 @@ def search_and_connect():
         # Search for the Android device using its MAC address
         print("Searching for Android server...")
         service_matches = bluetooth.find_service(address=server_mac_address, uuid=UUID)
-        #service_matches = bluetooth.find_service(name=_name, uuid=UUID, address=None)
-        #service_matches = bluetooth.find_service(name=_name, uuid=None, address=None)
         if len(service_matches) > 0:
             break
         sleep(1)
@@ -484,7 +418,6 @@ async def main():
     tasks = []
     tasks = [
         asyncio.create_task(send_LifeData()),
-        asyncio.create_task(sendDummy()),
         ]
     await asyncio.gather(*tasks)
 
@@ -495,7 +428,7 @@ try:
 
 except KeyboardInterrupt:
    #client_socket.close()    
-   print(strftime('%d-%b-%Y/%H:%M:%S')+" [ PiMowBot-It! Management: Bluetooth Remote interupted... ]")
+   print(strftime('%d-%b-%Y/%H:%M:%S')+" [  Bluetooth Remote interupted... ]")
    exitroutine()
 
 finally:
