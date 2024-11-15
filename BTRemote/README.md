@@ -3,8 +3,8 @@
 ### Here you will find the files of RoπLawnMows Remote Control
 ![grafik](https://github.com/user-attachments/assets/ac51a8ec-d32c-4444-866c-bd615d00e137)
 
-The Python file runs on the Raspberry Pi as a service in /etc/systemd/system/.
-The advantage: The Service starts the Python Script every time agian if the connection is lost
+The Python file runs on the Raspberry Pi as a service in /etc/systemd/system/ 
+The advantage: The service starts the Python Script every time agian if the connection breaks down
 ```
 [Unit]
 Description=BT-remoteClassic
@@ -23,12 +23,13 @@ SyslogIdentifier=BT-Classic
 WantedBy=multi-user.target
 ```
 
-I coded the Android App in Android Studio. I am not familiar with Android Studio, so I exported the Project as
-zip File and also as apk. So far I tested it you can copy the ap file in your Android Download Directory.
-A double Click will install the App. 
+I coded the Android App in Android Studio. I am not not an expert in Android Studio, so I exported the Project as
+zip file and also as apk. So far I tested it you can copy the apk file in your Android Download directory.
+A double click will install the App. In the zip file all sources are included if you want to adapt it to your needs.
 
-When I started the Coding, my plan was to have a BLE Communication between Pi and mobile Phone. This was extremly 
-difficult for me, so I changed ist to the calssic Bluettooth stack. But I forgot to change the name of the App.
-So if you will test it, use classic BT and pair your mobile before with your pi.
-Good Luck- 
+When I started with coding, my plan was to have a BLE Communication between Pi and mobile Phone. This was extremly 
+difficult for me. So I changed it to the calssic Bluettooth stack. But I forgot to change the name of the App.
+So if you will test it, use classic BT and pair your mobile before with your Pi.
+-Good Luck- 
+
 Your Feedback is welcome
