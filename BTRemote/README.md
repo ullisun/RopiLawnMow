@@ -1,11 +1,9 @@
-RoπLawnMows Remote Control
+![grafik](https://github.com/user-attachments/assets/9b70d9d1-bb97-4374-85b8-d3fc186df280)
 
-Here you will find the files of RoπLawnMows Remote Control
-
-
+### Here you will find the files of RoπLawnMows Remote Control
 ![grafik](https://github.com/user-attachments/assets/ac51a8ec-d32c-4444-866c-bd615d00e137)
 
-The Python file runs on the Raspberry Pi and runs as a service.
+The Python file runs on the Raspberry Pi as a service in /etc/systemd/system/.
 The advantage: The Service starts the Python Script every time agian if the connection is lost
 ```
 [Unit]
