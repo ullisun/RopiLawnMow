@@ -9,6 +9,11 @@ import subprocess
 import json
 #path="/home/pi/dev/Grasdetection/bilder/"
 #picture = "Bild_1.jpg"
+# For development reasons create the file with echo "" > /run/shm/fakelawn
+# and make shure that the image.jpg of this github folder https://github.com/ullisun/RopiLawnMow/edit/main/greendetction
+# is located in /home/pi/Mower/archive/images/.
+# Then you are able to test the other sensors in your test envoriment no lawn is needed.
+
 
 path="/dev/shm/"
 picture="image.jpg"
