@@ -318,8 +318,8 @@ if __name__ =="__main__":
     
     try:
              
-       #turnwheel()
-       mon_RPM()       
+       turnwheel()
+       #mon_RPM()       
        #hallcheck()
        #testsoll()
 
