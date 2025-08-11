@@ -138,7 +138,7 @@ pi.set_mode(lbtn,pigpio.INPUT)
 pi.set_mode(rbtn,pigpio.INPUT)
 
 motorr=Motor(PinPwm=16,PinDir=21,PinBreak=20,MaxSpeed=maxpwm,MainDir="F")
-motorl=Motor(PinPwm=13,PinDir=26,PinBreak=19,MaxSpeed=maxpwm,MainDir="B")
+motorl=Motor(PinPwm=13,PinDir=19,PinBreak=26,MaxSpeed=maxpwm,MainDir="B")
 
 HallL=pi.callback(lbtn, pigpio.RISING_EDGE, L_Hall)
 RPML = read_RPM.reader(pi, lbtn,pulses_per_rev=ticksperRev,min_RPM=0.0)
